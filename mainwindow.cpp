@@ -141,7 +141,7 @@ void MainWindow::init()
     connect(&thread_, &QThread::started, dnfThread_, &DnfThread::startWorkInAThread);
 
     thread_.start();
-    emit dnfThread_->GetPhotos("");
+    emit dnfThread_->GetPhotosPath("");
     // 初始化ui控件
     ui->comboBox_2->insertItem(0,"按键");
     ui->comboBox_2->insertItem(1,"按下");

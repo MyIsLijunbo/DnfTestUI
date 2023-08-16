@@ -3,7 +3,8 @@
 
 DnfThread::DnfThread(QObject *parent)
     :BaseGameThread(parent)
-    ,application_(new ApplicationControl())
+    ,application_(new ApplicationControl(this))
+    ,player_(new Player(this))
 {
     connect(this,&DnfThread::GetPhotosPath,this,&DnfThread::getPhotos);
 }
@@ -23,6 +24,7 @@ void DnfThread::startWorkInAThread()
     picture_.Match(player, playerRoi, score);
     picture_.Match(player, entryRoi, score);
     // 初始化系统事件对象
+   // player_->InsertPlayerEvent(0,"")
     // 图片截图，图片识别事先准备好的角色图片，游戏入口图片，技能图片。
     // 根据图片识别结果生成游戏动作。
     // 运行游戏动作。

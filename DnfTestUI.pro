@@ -16,6 +16,7 @@ SOURCES += \
     mainwindow.cpp \
     peripheralcontrol.cpp \
     player.cpp \
+    screencapturewin.cpp \
     yolo.cpp
 
 HEADERS += \
@@ -26,6 +27,7 @@ HEADERS += \
     mainwindow.h \
     peripheralcontrol.h \
     player.h \
+    screencapturewin.h \
     yolo.h
 
 FORMS += \

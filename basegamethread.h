@@ -5,6 +5,7 @@
 
 #include "applicationcontrol.h"
 #include "easytemplate.h"
+#include "player.h"
 class BaseGameThread : public QObject
 {
     Q_OBJECT
@@ -18,6 +19,7 @@ public slots:
 
 class DnfThread : public BaseGameThread
 {
+    Q_OBJECT
 public:
     explicit DnfThread(QObject *parent=nullptr);
 public slots:
@@ -26,9 +28,10 @@ private slots:
     void getPhotos(const QString path);
 private:
     QPointer<ApplicationControl> application_;
+    QPointer<Player> player_;
     EasyTemplate picture_;
 
 signals:
-    void GetPhotos(const QString path);
+    void GetPhotosPath(const QString path);
 };
 #endif // BASEGAMETHREAD_H
