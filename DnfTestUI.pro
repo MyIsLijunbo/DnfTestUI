@@ -10,6 +10,8 @@ CONFIG += c++17
 
 SOURCES += \
     applicationcontrol.cpp \
+    basegamethread.cpp \
+    easytemplate.cpp \
     main.cpp \
     mainwindow.cpp \
     peripheralcontrol.cpp \
@@ -19,6 +21,8 @@ SOURCES += \
 HEADERS += \
     GlobalValue.h \
     applicationcontrol.h \
+    basegamethread.h \
+    easytemplate.h \
     mainwindow.h \
     peripheralcontrol.h \
     player.h \

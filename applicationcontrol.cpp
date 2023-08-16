@@ -17,8 +17,8 @@ bool ApplicationControl::ShowApplication(const QString &name)
         return false;
     }
     else {
-        SetActiveWindow(handle_);
-        SetFocus(handle_);
+       // SetActiveWindow(handle_);
+       // SetFocus(handle_);
         BOOL succ = SetForegroundWindow(handle_);
         if (!succ)
         {
