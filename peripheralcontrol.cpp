@@ -23,7 +23,7 @@ bool PeripheralControl::KeyBoardEvent(const quint64 VirtualKey, const quint8 key
     {
         inputs[0].ki.dwFlags = KEYEVENTF_KEYUP;
     }
-    Sleep(50);
+    Sleep(20);
 
     UINT uSent = SendInput(ARRAYSIZE(inputs), inputs, sizeof(INPUT));
     if (uSent != ARRAYSIZE(inputs))
@@ -41,16 +41,18 @@ bool PeripheralControl::KeyBoardEvent(const quint64 VirtualKey, const quint8 key
 void PeripheralControl::RunScript()
 {
     QMapIterator<quint64,KeyBoardInfo> i(periheralEventMap_);
+    ClearkeyBoardDownEvent();
     while (i.hasNext()) {
         i.next();
         auto value = i.value();
-        for (int i = 0; i <  value.count; i++) {
+        for (quint32 i = 0; i <  value.count; i++) {
             if (KeyBoardDownUp == value.keyState)
             {
                 KeyBoardEvent(value.keyCode, KeyBordDown);
                 KeyBoardEvent(value.keyCode, KeyBordUp);
             }else
             {
+                lastKeyBoradCode = value.keyCode;
                 KeyBoardEvent(value.keyCode, value.keyState);
             }
         }
@@ -59,11 +61,33 @@ void PeripheralControl::RunScript()
 
 void PeripheralControl::ClearScript()
 {
+    ClearkeyBoardDownEvent();
     periheralEventMap_.clear();
+}
+
+void PeripheralControl::ClearkeyBoardDownEvent()
+{
+    for(quint64 downKeyCode : keyBoardDownEvent_)
+    {
+        if (1 == keyBoardDownEvent_.size()  && downKeyCode == quint64(lastKeyBoradCode))
+        {
+            continue;
+        }
+        KeyBoardEvent(downKeyCode, KeyBordUp);
+        keyBoardDownEvent_.removeFirst();
+    }
 }
 
 void PeripheralControl::InsertKeyBoard(const quint64 keyCode, const quint8 keyState, const quint32 count)
 {
+    if (keyCode == (quint64)lastKeyBoradCode && KeyBordDown == keyState)
+    {
+        return;
+    }
+    if (KeyBordDown == keyState)
+    {
+        keyBoardDownEvent_.push_back(keyCode);
+    }
     static quint64 eventIndex = 0;
     periheralEventMap_[eventIndex].keyState = keyState;
     periheralEventMap_[eventIndex].keyCode = keyCode;

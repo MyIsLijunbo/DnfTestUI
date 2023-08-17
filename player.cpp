@@ -29,5 +29,5 @@ void Player::Play()
 
 void Player::PlayOver()
 {
-
+    peripheralControl_->ClearScript();
 }

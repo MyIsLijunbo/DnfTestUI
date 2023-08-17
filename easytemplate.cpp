@@ -1,4 +1,6 @@
 #include "easytemplate.h"
+
+#include <qDebug>
 EasyTemplate::EasyTemplate()
 {
     gPryDownUsed = false;
@@ -41,6 +43,7 @@ bool EasyTemplate::Match(cv::Mat &Img, cv::Rect &roi, float &score)
     //模板尺寸小于被识别图像
     if (Img.cols < gTemplate.cols || Img.rows < gTemplate.rows)
         return false;
+
 
     //确保输入的是单通道图像
     cv::Mat GrayImg;
@@ -101,9 +104,9 @@ bool EasyTemplate::Match(cv::Mat &Img, cv::Rect &roi, float &score)
     roi.width = TempImg.cols;
     roi.height = TempImg.rows;
 
-    cv::rectangle(Img, matchLoc, cv::Point(matchLoc.x + TempImg.cols, matchLoc.y + TempImg.rows), cv::Scalar(255, 0, 0), 2, 8, 0);
-    cv::imshow("match-result", Img);
-    cv::waitKey(0);
+//    cv::rectangle(Img, matchLoc, cv::Point(matchLoc.x + TempImg.cols, matchLoc.y + TempImg.rows), cv::Scalar(255, 0, 0), 2, 8, 0);
+//    cv::imshow("match-result", Img);
+    //cv::waitKey(0);
     //使用降低采样
     if (gPryDownUsed)
     {

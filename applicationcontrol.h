@@ -10,9 +10,10 @@ public:
     explicit ApplicationControl(QObject *parent = nullptr);
 
     bool ShowApplication(const QString &name);
+    HWND handle_;
 signals:
 private:
-    HWND handle_;
+
 };
 
 #endif // APPLICATIONCONTROL_H

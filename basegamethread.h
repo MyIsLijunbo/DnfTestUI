@@ -5,7 +5,10 @@
 
 #include "applicationcontrol.h"
 #include "easytemplate.h"
+#include "gamebehavioranalysis.h"
 #include "player.h"
+#include "screencapturewin.h"
+
 class BaseGameThread : public QObject
 {
     Q_OBJECT
@@ -22,6 +25,8 @@ class DnfThread : public BaseGameThread
     Q_OBJECT
 public:
     explicit DnfThread(QObject *parent=nullptr);
+signals:
+    void printDebug(QString info);
 public slots:
     virtual void startWorkInAThread();
 private slots:
@@ -29,8 +34,11 @@ private slots:
 private:
     QPointer<ApplicationControl> application_;
     QPointer<Player> player_;
+    QPointer<GameBehaviorAnalysis> behaviorAnalysis_;
+    QPointer<ScreenCaptureWin> screenCaptureWin_;
     EasyTemplate picture_;
 
+    void debug(QString &info);
 signals:
     void GetPhotosPath(const QString path);
 };

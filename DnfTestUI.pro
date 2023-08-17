@@ -12,6 +12,7 @@ SOURCES += \
     applicationcontrol.cpp \
     basegamethread.cpp \
     easytemplate.cpp \
+    gamebehavioranalysis.cpp \
     main.cpp \
     mainwindow.cpp \
     peripheralcontrol.cpp \
@@ -24,6 +25,7 @@ HEADERS += \
     applicationcontrol.h \
     basegamethread.h \
     easytemplate.h \
+    gamebehavioranalysis.h \
     mainwindow.h \
     peripheralcontrol.h \
     player.h \

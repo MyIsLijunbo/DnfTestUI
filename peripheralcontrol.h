@@ -30,12 +30,15 @@ public:
 
     void RunScript();
     void ClearScript();
+    void ClearkeyBoardDownEvent();
 signals:
 
 private:
     void printKeyBoardEntry(int code);
     quint8 scanCodeFunc(const quint64 pKey);
     QMap<quint64,KeyBoardInfo> periheralEventMap_;
+    QList<quint64> keyBoardDownEvent_;
+    int lastKeyBoradCode = 0;
 };
 
 
