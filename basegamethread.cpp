@@ -35,36 +35,44 @@ void DnfThread::startWorkInAThread()
         picture_.Match(srcImage, playerRoi, score);
         QPoint playerXY = QPoint(playerRoi.x,playerRoi.y);
         qDebug()<< "player image size : "<< player.cols << player.rows;
-        qDebug()<< "playerXY :"<< playerXY.x() << " " << playerXY.y();
+        qDebug()<< "playerXY :"<< playerXY.x() << " " << playerXY.y() << " " << score;
 
         cv::Mat entry = cv::imread(g_AppPath.toStdString() +"/entry/entry.png");
 
         picture_.Mark(entry);
         picture_.Match(srcImage, entryRoi, score);
         QPoint entryXY = QPoint(entryRoi.x,entryRoi.y);
-        QPoint moveXY = behaviorAnalysis_->PlayerEntryBehaviorAnalysis(playerXY,entryXY);
         qDebug()<< "entry image size : "<< entry.cols << entry.rows;
         qDebug()<< "entryXY :"<< entryXY.x() << " " << entryXY.y() << " " << score;
-        qDebug()<< "moveXY :"<< moveXY.x() << " " << moveXY.y();
-        if (0 == moveXY.x() && 0 == moveXY.y() )
+
+        if (score < 0.5)
         {
-            return;
+            qDebug()<< "游戏入口查找失败!";
+            if (behaviorAnalysis_->keyBoardCode == 0)
+            {
+                continue;
+            }
+
+            player_->InsertPlayerEvent(0,behaviorAnalysis_->keyBoardCode,PeripheralControl::KeyBordUp,1);
+            player_->Play();
+            player_->PlayOver();
+            behaviorAnalysis_->keyBoardCode = 0;
+            continue;
         }
 
-        if (moveXY.x() > 20)
+        static int number = 0;
+        ++number;
+        std::string writeName = QString::number(number,10).toStdString() + "_" +QString::number(score).toStdString() +"_beijing.png";
+        cv::imwrite(writeName,srcImage);
+
+        quint64 keycode  = behaviorAnalysis_->PlayerEntryBehaviorAnalysis(playerXY,entryXY);
+
+        if (0 == keycode)
         {
-            player_->InsertPlayerEvent(0,VK_RIGHT,PeripheralControl::KeyBordDown,1);
-        }else if (moveXY.x() < -20)
-        {
-            player_->InsertPlayerEvent(0,VK_LEFT,PeripheralControl::KeyBordDown,1);
-        } else if (moveXY.y() > 20)
-        {
-            player_->InsertPlayerEvent(0,VK_DOWN,PeripheralControl::KeyBordDown,1);
-        }else if (moveXY.y() < -20)
-        {
-            player_->InsertPlayerEvent(0,VK_UP,PeripheralControl::KeyBordDown,1);
+            continue;
         }
 
+        player_->InsertPlayerEvent(0,keycode,PeripheralControl::KeyBordDown,1);
         player_->Play();
         player_->PlayOver();
         // 初始化系统事件对象

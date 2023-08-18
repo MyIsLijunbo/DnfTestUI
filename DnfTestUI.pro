@@ -50,7 +50,7 @@ INCLUDEPATH += $$PWD/opencv_4.8/include
 
 
 
-win32: LIBS += -L$$PWD/opencv_4.8/lib/ \
+win32: LIBS +=  -L$$PWD/opencv_4.8/lib/ \
                 -llibopencv_core480d.dll \
                 -llibopencv_calib3d480d.dll \
                 -llibopencv_dnn480d.dll \

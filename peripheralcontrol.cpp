@@ -33,7 +33,7 @@ bool PeripheralControl::KeyBoardEvent(const quint64 VirtualKey, const quint8 key
     }
     else
     {
-        printKeyBoardEntry(VirtualKey);
+        printKeyBoardEntry(VirtualKey, keyState);
         return 1;
     }
 }
@@ -67,15 +67,7 @@ void PeripheralControl::ClearScript()
 
 void PeripheralControl::ClearkeyBoardDownEvent()
 {
-    for(quint64 downKeyCode : keyBoardDownEvent_)
-    {
-        if (1 == keyBoardDownEvent_.size()  && downKeyCode == quint64(lastKeyBoradCode))
-        {
-            continue;
-        }
-        KeyBoardEvent(downKeyCode, KeyBordUp);
-        keyBoardDownEvent_.removeFirst();
-    }
+
 }
 
 void PeripheralControl::InsertKeyBoard(const quint64 keyCode, const quint8 keyState, const quint32 count)
@@ -83,154 +75,163 @@ void PeripheralControl::InsertKeyBoard(const quint64 keyCode, const quint8 keySt
     if (keyCode == (quint64)lastKeyBoradCode && KeyBordDown == keyState)
     {
         return;
-    }
-    if (KeyBordDown == keyState)
+    }else if (0 != lastKeyBoradCode && lastKeyBoradCode != keyCode && KeyBordDown == keyState)
     {
-        keyBoardDownEvent_.push_back(keyCode);
+        KeyBoardEvent(lastKeyBoradCode, KeyBordUp);
     }
+
     static quint64 eventIndex = 0;
     periheralEventMap_[eventIndex].keyState = keyState;
     periheralEventMap_[eventIndex].keyCode = keyCode;
     periheralEventMap_[eventIndex].count = count;
     ++eventIndex;
 }
-void PeripheralControl::printKeyBoardEntry(int code)
+void PeripheralControl::printKeyBoardEntry(const int code, const int state) const
 {
+    QString strState;
+    if (KeyBordUp == state)
+    {
+        strState = " 弹起";
+    }else
+    {
+         strState = " 按下";
+    }
+
     switch (code) {
     case 0x30: case 0x60:
-        qDebug()<<"检测到按键："<< "0";
+        qDebug()<<"检测到按键："<< "0" << strState;
         break;
     case 0x31: case 0x61:
-        qDebug()<<"检测到按键："<< "1";
+        qDebug()<<"检测到按键："<< "1" << strState;
         break;
     case 0x32: case 0x62:
-        qDebug()<<"检测到按键："<< "2";
+        qDebug()<<"检测到按键："<< "2" << strState;
         break;
     case 0x33: case 0x63:
-        qDebug()<< "检测到按键："<< "3";
+        qDebug()<< "检测到按键："<< "3" << strState;
         break;
     case 0x34: case 0x64:
-        qDebug()<< "检测到按键："<< "4";
+        qDebug()<< "检测到按键："<< "4" << strState;
         break;
     case 0x35: case 0x65:
-        qDebug()<< "检测到按键："<< "5";
+        qDebug()<< "检测到按键："<< "5" << strState;
         break;
     case 0x36: case 0x66:
-        qDebug()<< "检测到按键："<< "6";
+        qDebug()<< "检测到按键："<< "6" << strState;
         break;
     case 0x37: case 0x67:
-        qDebug()<< "检测到按键："<< "7";
+        qDebug()<< "检测到按键："<< "7" << strState;
         break;
     case 0x38: case 0x68:
-        qDebug()<< "检测到按键："<< "8";
+        qDebug()<< "检测到按键："<< "8" << strState;
         break;
     case 0x39: case 0x69:
-        qDebug()<< "检测到按键："<< "9";
+        qDebug()<< "检测到按键："<< "9" << strState;
         break;
     case 0x41:
-        qDebug()<< "检测到按键："<< "A";
+        qDebug()<< "检测到按键："<< "A" << strState;
         break;
     case 0x42:
-        qDebug()<< "检测到按键："<< "B";
+        qDebug()<< "检测到按键："<< "B" << strState;
         break;
     case 0x43:
-        qDebug()<< "检测到按键："<< "C";
+        qDebug()<< "检测到按键："<< "C" << strState;
         break;
     case 0x44:
-        qDebug()<< "检测到按键："<< "D";
+        qDebug()<< "检测到按键："<< "D" << strState;
         break;
     case 0x45:
-        qDebug()<< "检测到按键："<< "E";
+        qDebug()<< "检测到按键："<< "E" << strState;
         break;
     case 0x46:
-        qDebug()<< "检测到按键："<< "F";
+        qDebug()<< "检测到按键："<< "F" << strState;
         break;
     case 0x47:
-        qDebug()<< "检测到按键："<< "G";
+        qDebug()<< "检测到按键："<< "G" << strState;
         break;
     case 0x48:
-        qDebug()<< "检测到按键："<< "H";
+        qDebug()<< "检测到按键："<< "H" << strState;
         break;
     case 0x49:
-        qDebug()<< "检测到按键："<< "I";
+        qDebug()<< "检测到按键："<< "I" << strState;
         break;
     case 0x4A:
-        qDebug()<< "检测到按键："<< "J";
+        qDebug()<< "检测到按键："<< "J" << strState;
         break;
     case 0x4B:
-        qDebug()<< "检测到按键："<< "K";
+        qDebug()<< "检测到按键："<< "K" << strState;
         break;
     case 0x4C:
-        qDebug()<< "检测到按键："<< "L";
+        qDebug()<< "检测到按键："<< "L" << strState;
         break;
     case 0x4D:
-        qDebug()<< "检测到按键："<< "M";
+        qDebug()<< "检测到按键："<< "M" << strState;
         break;
     case 0x4E:
-        qDebug()<< "检测到按键："<< "N";
+        qDebug()<< "检测到按键："<< "N" << strState;
         break;
     case 0x4F:
-        qDebug()<< "检测到按键："<< "O";
+        qDebug()<< "检测到按键："<< "O" << strState;
         break;
     case 0x50:
-        qDebug()<< "检测到按键："<< "P";
+        qDebug()<< "检测到按键："<< "P" << strState;
         break;
     case 0x51:
-        qDebug()<< "检测到按键："<< "Q";
+        qDebug()<< "检测到按键："<< "Q" << strState;
         break;
     case 0x52:
-        qDebug()<< "检测到按键："<< "R";
+        qDebug()<< "检测到按键："<< "R" << strState;
         break;
     case 0x53:
-        qDebug()<< "检测到按键："<< "S";
+        qDebug()<< "检测到按键："<< "S" << strState;
         break;
     case 0x54:
-        qDebug()<< "检测到按键："<< "T";
+        qDebug()<< "检测到按键："<< "T" << strState;
         break;
     case 0x55:
-        qDebug()<< "检测到按键："<< "U";
+        qDebug()<< "检测到按键："<< "U" << strState;
         break;
     case 0x56:
-        qDebug()<< "检测到按键："<< "V";
+        qDebug()<< "检测到按键："<< "V" << strState;
         break;
     case 0x57:
-        qDebug()<< "检测到按键："<< "W";
+        qDebug()<< "检测到按键："<< "W" << strState;
         break;
     case 0x58:
-        qDebug()<< "检测到按键："<< "X";
+        qDebug()<< "检测到按键："<< "X" << strState;
         break;
     case 0x59:
-        qDebug()<< "检测到按键："<< "Y";
+        qDebug()<< "检测到按键："<< "Y" << strState;
         break;
     case 0x5A:
-        qDebug()<< "检测到按键："<< "Z";
+        qDebug()<< "检测到按键："<< "Z" << strState;
         break;
     case 0x6A:
-        qDebug()<< "检测到按键："<< "*";
+        qDebug()<< "检测到按键："<< "*" << strState;
         break;
     case 0x6B:
-        qDebug()<< "检测到按键："<< "+";
+        qDebug()<< "检测到按键："<< "+" << strState;
         break;
     case 0x6D:
-        qDebug()<< "检测到按键："<< "-";
+        qDebug()<< "检测到按键："<< "-" << strState;
         break;
     case 0x6E:
-        qDebug()<< "检测到按键："<< ".";
+        qDebug()<< "检测到按键："<< "." << strState;
         break;
     case 0x6F:
-        qDebug()<< "检测到按键："<< "/";
+        qDebug()<< "检测到按键："<< "/" << strState;
         break;
     case 0x0D:
-        qDebug()<< "检测到按键："<< "Enter";
+        qDebug()<< "检测到按键："<< "Enter" << strState;
         break;
     case 0xA0: case 0xA1:
-        qDebug()<< "检测到按键："<< "Shift";
+        qDebug()<< "检测到按键："<< "Shift" << strState;
         break;
     case 0x08:
-        qDebug()<< "检测到按键："<< "Backspace";
+        qDebug()<< "检测到按键："<< "Backspace" << strState;
         break;
     case 0x20:
-        qDebug()<< "检测到按键："<< "Space";
+        qDebug()<< "检测到按键："<< "Space" << strState;
         break;
     }
 }

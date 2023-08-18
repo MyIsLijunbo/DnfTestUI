@@ -34,11 +34,10 @@ public:
 signals:
 
 private:
-    void printKeyBoardEntry(int code);
+    void printKeyBoardEntry(const int code, const int state) const;
     quint8 scanCodeFunc(const quint64 pKey);
     QMap<quint64,KeyBoardInfo> periheralEventMap_;
-    QList<quint64> keyBoardDownEvent_;
-    int lastKeyBoradCode = 0;
+    quint64 lastKeyBoradCode = 0;
 };
 
 
