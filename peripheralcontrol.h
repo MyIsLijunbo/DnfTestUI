@@ -24,16 +24,22 @@ class PeripheralControl : public QObject
 public:
     enum KeyBordState{KeyBoardDownUp,KeyBordDown,KeyBordUp};
     explicit PeripheralControl(QObject *parent = nullptr);
+
     bool KeyBoardEvent(const quint64 keyCode, const quint8 keyState);
+    bool MouseLeftClick(const int dx, const int dy, const int once);
+    bool MouseRightClick(const int dx, const int dy, const int once);
 
     void InsertKeyBoard(const quint64 keyCode, const quint8 keyState, const quint32 count);
-
     void RunScript();
     void ClearScript();
     void ClearkeyBoardDownEvent();
-signals:
-
 private:
+    bool MouseEvent(const int dx, const int dy, const bool absolute);
+    void MouseLeftDown();
+    void MouseLeftUp();
+    void MouseRightDown();
+    void MouseRightUp();
+
     void printKeyBoardEntry(const int code, const int state) const;
     quint8 scanCodeFunc(const quint64 pKey);
     QMap<quint64,KeyBoardInfo> periheralEventMap_;

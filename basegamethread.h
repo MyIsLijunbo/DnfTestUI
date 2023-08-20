@@ -25,10 +25,9 @@ class DnfThread : public BaseGameThread
     Q_OBJECT
 public:
     explicit DnfThread(QObject *parent=nullptr);
-signals:
-    void printDebug(QString info);
 public slots:
     virtual void startWorkInAThread();
+    void timeTask();
 private slots:
     void getPhotos(const QString path);
 private:
@@ -37,9 +36,8 @@ private:
     QPointer<GameBehaviorAnalysis> behaviorAnalysis_;
     QPointer<ScreenCaptureWin> screenCaptureWin_;
     EasyTemplate picture_;
-
-    void debug(QString &info);
 signals:
     void GetPhotosPath(const QString path);
+    void SendMessageBox(const QString path);
 };
 #endif // BASEGAMETHREAD_H

@@ -4,6 +4,8 @@
 #include "GlobalValue.h"
 #include "yolo.h"
 
+#include <QMessageBox>
+
 using namespace cv;
 
 QString g_AppPath = "";
@@ -34,6 +36,8 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+    thread_.quit();
+    thread_.wait();
 }
 
 void MainWindow::init()
@@ -44,6 +48,7 @@ void MainWindow::init()
     ui->comboBox_2->insertItem(2,"弹起");
     g_AppPath = qApp->applicationDirPath();
     // 初始化线程
+    thread_.setParent(this);
     dnfThread_->moveToThread(&thread_);
     connect(&thread_, &QThread::finished, dnfThread_, &QObject::deleteLater);
     connect(&thread_, &QThread::started, dnfThread_, &DnfThread::startWorkInAThread);
@@ -51,9 +56,10 @@ void MainWindow::init()
     thread_.start();
 
     // 初始化信号
-    connect(dnfThread_,&DnfThread::printDebug,this,[=](QString info){
-        info += "\n";
-        ui->textEdit->insertPlainText(info);
+    connect(dnfThread_,&DnfThread::SendMessageBox,this,[=](QString info){
+        QMessageBox msgBox;
+        msgBox.setText(info);
+        msgBox.exec();
     });
 }
 void MainWindow::on_pushButton_clicked()

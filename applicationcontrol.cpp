@@ -28,3 +28,31 @@ bool ApplicationControl::ShowApplication(const QString &name)
     }
     return true;
 }
+
+bool ApplicationControl::SetWindowPosion(const int x, const int y, const int width, const int height)
+{
+    if (!handle_)
+    {
+        qDebug() << "not find handle! \n";
+        return false;
+    }
+
+    return MoveWindow(handle_, x, y, width, height, true);
+}
+
+void ApplicationControl::GetWindowPosion(int &x, int &y, int &width, int &height)
+{
+    if (!handle_)
+    {
+        qDebug() << "not find handle! \n";
+        return ;
+    }
+
+    RECT rect;
+    GetWindowRect(handle_,&rect);
+    x = rect.top;
+    y = rect.left;
+    width = rect.right - rect.left;
+    height = rect.bottom - rect.top;
+    return ;
+}

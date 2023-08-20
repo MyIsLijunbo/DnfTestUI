@@ -38,6 +38,109 @@ bool PeripheralControl::KeyBoardEvent(const quint64 VirtualKey, const quint8 key
     }
 }
 
+bool PeripheralControl::MouseEvent(const int dx, const int dy, const bool absolute)
+{
+    double fScreenWidth = ::GetSystemMetrics(SM_CXSCREEN) - 1;//获取屏幕分辨率宽度
+    double fScreenHeight = ::GetSystemMetrics(SM_CYSCREEN) - 1;//获取屏幕分辨率高度
+    double fx = dx*(65535.0f / fScreenWidth);
+    double fy = dy*(65535.0f / fScreenHeight);
+
+    INPUT inputs[1] = {};
+    ZeroMemory(inputs, sizeof(inputs));
+    inputs[0].type = INPUT_MOUSE;
+    inputs[0].mi.dx = fx;
+    inputs[0].mi.dy = fy;
+    inputs[0].mi.mouseData = 0;
+    if (absolute == 1)
+    {
+        inputs[0].mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE;
+    }
+    else if (absolute == 0)
+    {
+        inputs[0].mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE;
+    }
+
+
+    Sleep(20);
+    UINT uSent = SendInput(ARRAYSIZE(inputs), inputs, sizeof(INPUT));
+    if (uSent != ARRAYSIZE(inputs))
+    {
+        qDebug() << "SendInput failed: 0x%x\n" << HRESULT_FROM_WIN32(GetLastError());
+        return 0;
+    }
+    else
+    {
+        qDebug() << "mouse Success" ;
+        return 1;
+    }
+
+}
+void PeripheralControl::MouseLeftDown()//鼠标左键按下
+{
+    INPUT  Input = { 0 };
+    Input.type = INPUT_MOUSE;
+    Input.mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
+    Sleep(10);
+    SendInput(1, &Input, sizeof(INPUT));
+}
+
+void PeripheralControl::MouseLeftUp()//鼠标左键放开
+{
+    INPUT  Input = { 0 };
+    Input.type = INPUT_MOUSE;
+    Input.mi.dwFlags = MOUSEEVENTF_LEFTUP;
+    Sleep(10);
+    SendInput(1, &Input, sizeof(INPUT));
+}
+
+void PeripheralControl::MouseRightDown()
+{
+    INPUT  Input = { 0 };
+    Input.type = INPUT_MOUSE;
+    Input.mi.dwFlags = MOUSEEVENTF_RIGHTDOWN;
+    Sleep(10);
+    SendInput(1, &Input, sizeof(INPUT));
+}
+
+void PeripheralControl::MouseRightUp()
+{
+    INPUT  Input = { 0 };
+    Input.type = INPUT_MOUSE;
+    Input.mi.dwFlags = MOUSEEVENTF_RIGHTUP;
+    Sleep(10);
+    SendInput(1, &Input, sizeof(INPUT));
+}
+
+bool PeripheralControl::MouseLeftClick(const int dx, const int dy, const int once)
+{
+    for(int i = 0; i < once; i++)
+    {
+         bool succ = MouseEvent(dx, dy, true);
+         if (!succ)
+         {
+             return succ;
+         }
+        MouseLeftDown();
+        MouseLeftUp();
+    }
+     return true;
+}
+
+bool PeripheralControl::MouseRightClick(const int dx, const int dy, const int once)
+{
+    for(int i = 0; i < once; i++)
+    {
+         bool succ = MouseEvent(dx, dy, true);
+         if (!succ)
+         {
+             return succ;
+         }
+        MouseRightDown();
+        MouseRightUp();
+    }
+    return true;
+}
+
 void PeripheralControl::RunScript()
 {
     QMapIterator<quint64,KeyBoardInfo> i(periheralEventMap_);
@@ -94,7 +197,7 @@ void PeripheralControl::printKeyBoardEntry(const int code, const int state) cons
         strState = " 弹起";
     }else
     {
-         strState = " 按下";
+        strState = " 按下";
     }
 
     switch (code) {
